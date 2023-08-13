@@ -3,42 +3,41 @@
  * @module Constants
  */
 
-import { RequestInit } from 'undici'
-import { BooruCredentials } from './boorus/Booru'
-import siteJson from './sites.json'
-import Site from './structures/Site'
-import SiteInfo from './structures/SiteInfo'
-import { querystring } from './Utils'
+import { BooruCredentials } from "./boorus/Booru.ts"
+import siteJson from "./sites.json" assert { type: "json" }
+import Site from "./structures/Site.ts"
+import SiteInfo from "./structures/SiteInfo.ts"
+import { querystring } from "./Utils.ts"
 
 export type AnySite =
-  | 'e621.net'
-  | 'e926.net'
-  | 'hypnohub.net'
-  | 'danbooru.donmai.us'
-  | 'konachan.com'
-  | 'konachan.net'
-  | 'yande.re'
-  | 'gelbooru.com'
-  | 'rule34.xxx'
-  | 'safebooru.org'
-  | 'tbib.org'
-  | 'xbooru.com'
-  | 'rule34.paheal.net'
-  | 'derpibooru.org'
-  | 'realbooru.com'
+  | "e621.net"
+  | "e926.net"
+  | "hypnohub.net"
+  | "danbooru.donmai.us"
+  | "konachan.com"
+  | "konachan.net"
+  | "yande.re"
+  | "gelbooru.com"
+  | "rule34.xxx"
+  | "safebooru.org"
+  | "tbib.org"
+  | "xbooru.com"
+  | "rule34.paheal.net"
+  | "derpibooru.org"
+  | "realbooru.com"
 
 type gelTags = {
-  'rating:e': 'rating:explicit'
-  'rating:q': 'rating:questionable'
-  'rating:s': 'rating:safe'
+  "rating:e": "rating:explicit"
+  "rating:q": "rating:questionable"
+  "rating:s": "rating:safe"
 
   [key: string]: string
 }
 
 const expandedTags: gelTags = {
-  'rating:e': 'rating:explicit',
-  'rating:q': 'rating:questionable',
-  'rating:s': 'rating:safe',
+  "rating:e": "rating:explicit",
+  "rating:q": "rating:questionable",
+  "rating:s": "rating:safe",
 }
 
 /**
@@ -61,7 +60,7 @@ export class BooruError extends Error {
       Error.captureStackTrace(this, BooruError)
     }
 
-    this.name = 'BooruError'
+    this.name = "BooruError"
   }
 }
 
@@ -112,7 +111,7 @@ export function searchURI(
   )
 
   return (
-    `http${site.insecure ? '' : 's'}://` +
+    `http${site.insecure ? "" : "s"}://` +
     `${site.domain}${site.api.search}` +
     query
   )
@@ -126,7 +125,7 @@ export function searchURI(
  */
 export const defaultOptions: RequestInit = {
   headers: {
-    Accept: 'application/json, application/xml;q=0.9, */*;q=0.8',
-    'User-Agent': USER_AGENT,
+    Accept: "application/json, application/xml;q=0.9, */*;q=0.8",
+    "User-Agent": USER_AGENT,
   },
 }

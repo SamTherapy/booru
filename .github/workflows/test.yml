@@ -1,0 +1,19 @@
+name: Build
+on: 
+  - push
+  - pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deno-version: [current]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: denoland/setup-deno@v1
+      with:
+        version: ${{ matrix.deno-version }}
+    - name: Test Deno Module
+      run: deno test --allow-net --parallel
+

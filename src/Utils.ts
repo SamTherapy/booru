@@ -3,9 +3,9 @@
  * @module Utils
  */
 
-import { AnySite, BooruError, sites } from './Constants'
+import { AnySite, BooruError, sites } from "./Constants.ts"
 
-import { XMLParser } from 'fast-xml-parser'
+import { XMLParser } from "npm:fast-xml-parser"
 
 /**
  * Check if `site` is a supported site (and check if it's an alias and return the sites's true name)
@@ -14,7 +14,7 @@ import { XMLParser } from 'fast-xml-parser'
  * @return {String?} null if site is not supported, the site otherwise
  */
 export function resolveSite(domain: string): AnySite | null {
-  if (typeof domain !== 'string') {
+  if (typeof domain !== "string") {
     return null
   }
 
@@ -44,13 +44,13 @@ interface XMLPosts {
 
 interface BooruXML {
   html?: XMLPage
-  '!doctype'?: XMLPage
+  "!doctype"?: XMLPage
   posts: XMLPosts
 }
 
 const xmlParser = new XMLParser({
   ignoreAttributes: false,
-  attributeNamePrefix: '',
+  attributeNamePrefix: "",
 })
 
 /**
@@ -61,25 +61,25 @@ const xmlParser = new XMLParser({
  * @return {Object[]} A Promise with an array of objects created from the xml
  */
 export function jsonfy(xml: string): object[] {
-  if (typeof xml === 'object') return xml
+  if (typeof xml === "object") return xml
 
   const data = xmlParser.parse(xml) as BooruXML
 
-  if (data.html || data['!doctype']) {
+  if (data.html || data["!doctype"]) {
     // Some boorus return HTML error pages instead of JSON responses on errors
     // So try scraping off what we can in that case
-    const page = data.html || data['!doctype']?.html
+    const page = data.html || data["!doctype"]?.html
     const message = []
     if (page.body.h1) {
       message.push(page.body.h1)
     }
 
     if (page.body.p) {
-      message.push(page.body.p['#text'])
+      message.push(page.body.p["#text"])
     }
 
     throw new BooruError(
-      `The Booru sent back an error: '${message.join(': ')}'`,
+      `The Booru sent back an error: '${message.join(": ")}'`,
     )
   }
 
@@ -102,7 +102,7 @@ export function jsonfy(xml: string): object[] {
  * @returns Either the parsed data, or an empty array
  */
 export function tryParseJSON(data: string): Record<string, unknown>[] {
-  if (data === '') {
+  if (data === "") {
     return []
   }
 
@@ -161,16 +161,16 @@ export function validateSearchParams(
 ): { site: string; limit: number } {
   const resolvedSite = resolveSite(site)
 
-  if (typeof limit !== 'number') {
+  if (typeof limit !== "number") {
     limit = parseInt(limit, 10)
   }
 
   if (resolvedSite === null) {
-    throw new BooruError('Site not supported')
+    throw new BooruError("Site not supported")
   }
 
-  if (typeof limit !== 'number' || Number.isNaN(limit)) {
-    throw new BooruError('`limit` should be an int')
+  if (typeof limit !== "number" || Number.isNaN(limit)) {
+    throw new BooruError("`limit` should be an int")
   }
 
   return { site: resolvedSite, limit }
@@ -186,7 +186,7 @@ export function validateSearchParams(
  */
 export function compareArrays(arr1: string[], arr2: string[]): string[] {
   return arr1.filter((e1) =>
-    arr2.some((e2) => e1.toLowerCase() === e2.toLowerCase()),
+    arr2.some((e2) => e1.toLowerCase() === e2.toLowerCase())
   )
 }
 
@@ -214,16 +214,18 @@ interface EncodeURIQueryValueOptions {
  */
 export function querystring(
   query: Record<string, QueryValue>,
-  { arrayJoin = '+' }: QuerystringOptions = {},
+  { arrayJoin = "+" }: QuerystringOptions = {},
 ): string {
   return Object.entries(query)
     .map(
       ([key, value]) =>
-        `${encodeURIComponent(key)}=${encodeURIQueryValue(value, {
-          arrayJoin,
-        })}`,
+        `${encodeURIComponent(key)}=${
+          encodeURIQueryValue(value, {
+            arrayJoin,
+          })
+        }`,
     )
-    .join('&')
+    .join("&")
 }
 
 /**
@@ -234,7 +236,7 @@ export function querystring(
  */
 export function encodeURIQueryValue(
   value: QueryValue,
-  { arrayJoin = '+' }: EncodeURIQueryValueOptions = {},
+  { arrayJoin = "+" }: EncodeURIQueryValueOptions = {},
 ): string {
   if (Array.isArray(value)) {
     return value.map(encodeURIComponent).join(arrayJoin)

@@ -3,11 +3,11 @@
  * @module Boorus
  */
 
-import { BooruError } from '../Constants'
-import SearchParameters from '../structures/SearchParameters'
-import SearchResults from '../structures/SearchResults'
-import Site from '../structures/Site'
-import Booru, { BooruCredentials } from './Booru'
+import { BooruError } from "../Constants.ts"
+import SearchParameters from "../structures/SearchParameters.ts"
+import SearchResults from "../structures/SearchResults.ts"
+import Site from "../structures/Site.ts"
+import Booru, { BooruCredentials } from "./Booru.ts"
 
 /**
  * A class designed for Derpibooru
@@ -37,21 +37,20 @@ export default class Derpibooru extends Booru {
 
     // For any image, you must supply *
     if (tags[0] === undefined) {
-      tags[0] = '*'
+      tags[0] = "*"
     }
 
     // Derpibooru offsets the pages by 1
     page += 1
 
-    const uri =
-      this.getSearchUrl({ tags, limit, page }) +
-      (random && this.site.random === 'string' ? `&${this.site.random}` : '') +
-      (this.credentials ? `&key=${this.credentials.token}` : '')
+    const uri = this.getSearchUrl({ tags, limit, page }) +
+      (random && this.site.random === "string" ? `&${this.site.random}` : "") +
+      (this.credentials ? `&key=${this.credentials.token}` : "")
 
     return super
       .doSearchRequest(tags, { limit, random, page, uri })
       .then((r) =>
-        super.parseSearchResult(r, { fakeLimit: 0, tags, limit, random, page }),
+        super.parseSearchResult(r, { fakeLimit: 0, tags, limit, random, page })
       )
       .catch((e) => Promise.reject(new BooruError(e)))
   }

@@ -3,8 +3,8 @@
  * @module Boorus
  */
 
-import Site from '../structures/Site'
-import Booru, { BooruCredentials } from './Booru'
+import Site from "../structures/Site.ts"
+import Booru, { BooruCredentials } from "./Booru.ts"
 
 /**
  * A class designed for Xml-returning boorus

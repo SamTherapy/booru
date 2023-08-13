@@ -3,8 +3,8 @@
  * @module Structures
  */
 
-import SiteApi from './SiteApi'
-import SiteInfo from './SiteInfo'
+import SiteApi from "./SiteApi.ts"
+import SiteInfo from "./SiteInfo.ts"
 
 /**
  * Represents a site, mostly used for JSDoc
@@ -38,14 +38,14 @@ export default class Site {
 
   constructor(data: SiteInfo) {
     this.domain = data.domain
-    this.type = data.type ?? 'json'
+    this.type = data.type ?? "json"
     this.aliases = data.aliases ?? []
     this.nsfw = data.nsfw
     this.api = data.api ?? {}
-    this.paginate = data.paginate ?? 'page'
+    this.paginate = data.paginate ?? "page"
     this.random = data.random ?? false
-    this.tagQuery = data.tagQuery ?? 'tags'
-    this.tagJoin = data.tagJoin ?? '+'
+    this.tagQuery = data.tagQuery ?? "tags"
+    this.tagJoin = data.tagJoin ?? "+"
     this.insecure = data.insecure ?? false
     this.defaultTags = data.defaultTags ?? []
   }

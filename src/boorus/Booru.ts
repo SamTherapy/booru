@@ -3,22 +3,14 @@
  * @module Boorus
  */
 
-import { fetch } from 'undici'
-import { BooruError, defaultOptions, searchURI } from '../Constants'
-import { jsonfy, resolveSite, shuffle, tryParseJSON } from '../Utils'
+import { BooruError, defaultOptions, searchURI } from "../Constants.ts"
+import { jsonfy, resolveSite, shuffle, tryParseJSON } from "../Utils.ts"
 
-import InternalSearchParameters from '../structures/InternalSearchParameters'
-import Post from '../structures/Post'
-import SearchParameters from '../structures/SearchParameters'
-import SearchResults from '../structures/SearchResults'
-import Site from '../structures/Site'
-
-// Shut up the compiler
-// This attempts to find and use the native browser fetch, if possible
-// Fixes https://github.com/AtoraSuunva/booru/issues/51
-declare const window: any
-const resolvedFetch: typeof fetch =
-  typeof window !== 'undefined' ? window.fetch.bind(window) : fetch
+import InternalSearchParameters from "../structures/InternalSearchParameters.ts"
+import Post from "../structures/Post.ts"
+import SearchParameters from "../structures/SearchParameters.ts"
+import SearchResults from "../structures/SearchResults.ts"
+import Site from "../structures/Site.ts"
 
 export type BooruCredentials = Record<string, string>
 
@@ -129,13 +121,13 @@ export class Booru {
    * @return {String} The url to the post
    */
   public postView(id: string | number): string {
-    if (typeof id === 'string' && Number.isNaN(parseInt(id, 10))) {
+    if (typeof id === "string" && Number.isNaN(parseInt(id, 10))) {
       throw new BooruError(`Not a valid id for postView: ${id}`)
     }
 
-    return `http${this.site.insecure ? '' : 's'}://${this.domain}${
-      this.site.api.postView
-    }${id}`
+    return `http${
+      this.site.insecure ? "" : "s"
+    }://${this.domain}${this.site.api.postView}${id}`
   }
 
   /**
@@ -162,28 +154,30 @@ export class Booru {
 
     if (random) {
       if (this.site.random) {
-        tags.push('order:random')
+        tags.push("order:random")
       } else {
         fakeLimit = 100
       }
     }
 
     if (this.site.defaultTags) {
-      tags = tags.concat(this.site.defaultTags.filter((v) => !tags.includes(v)))
+      tags = tags.concat(
+        this.site.defaultTags.filter((v) => !tags.includes(v)),
+      )
     }
 
-    const fetchuri =
-      uri || this.getSearchUrl({ tags, limit: fakeLimit || limit, page })
+    const fetchuri = uri ||
+      this.getSearchUrl({ tags, limit: fakeLimit || limit, page })
     const options = defaultOptions
-    const xml = this.site.type === 'xml'
+    const xml = this.site.type === "xml"
 
     try {
-      const response = await resolvedFetch(fetchuri, options)
+      const response = await fetch(fetchuri, options)
 
       // Check for CloudFlare ratelimiting
       if (response.status === 503) {
         const body = await response.clone().text()
-        if (body.includes('cf-browser-verification')) {
+        if (body.includes("cf-browser-verification")) {
           throw new BooruError(
             "Received a CloudFlare browser verification request. Can't proceed.",
           )
@@ -206,7 +200,7 @@ export class Booru {
         return posts
       }
     } catch (err) {
-      if ((err as any).type === 'invalid-json') return ''
+      if ((err as any).type === "invalid-json") return ""
       throw err
     }
   }
@@ -251,10 +245,10 @@ export class Booru {
     }
 
     // Gelbooru
-    if (result['@attributes']) {
-      const attributes = result['@attributes']
+    if (result["@attributes"]) {
+      const attributes = result["@attributes"]
 
-      if (attributes.count === '0' || !result.post) {
+      if (attributes.count === "0" || !result.post) {
         result = []
       } else if (Array.isArray(result.post)) {
         result = result.post
@@ -273,7 +267,7 @@ export class Booru {
 
     let r: string[] | undefined
     // If gelbooru/other booru decides to return *nothing* instead of an empty array
-    if (result === '') {
+    if (result === "") {
       r = []
     } else if (fakeLimit) {
       r = shuffle(result)

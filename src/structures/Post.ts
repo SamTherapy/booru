@@ -3,12 +3,12 @@
  * @module Structures
  */
 
-import { deprecate } from 'util'
-import Booru from '../boorus/Booru'
+// import { deprecate } from 'util.ts'
+import Booru from "../boorus/Booru.ts"
 
 // eslint-disable-next-line no-empty,@typescript-eslint/no-empty-function
-const common = deprecate(() => {},
-'Common is now deprecated, just access the properties directly')
+// const common = deprecate(() => {},
+// 'Common is now deprecated, just access the properties directly')
 
 /**
  * Tries to figure out what the image url should be
@@ -20,23 +20,23 @@ const common = deprecate(() => {},
 function parseImageUrl(url: string, data: any, booru: Booru): string | null {
   // If the image's file_url is *still* undefined or the source is empty or it's deleted
   // Thanks danbooru *grumble grumble*
-  if (!url || url.trim() === '' || data.is_deleted) {
+  if (!url || url.trim() === "" || data.is_deleted) {
     return null
   }
 
-  if (url.startsWith('/data')) {
+  if (url.startsWith("/data")) {
     url = `https://danbooru.donmai.us${url}`
   }
 
-  if (url.startsWith('/cached')) {
+  if (url.startsWith("/cached")) {
     url = `https://danbooru.donmai.us${url}`
   }
 
-  if (url.startsWith('/_images')) {
+  if (url.startsWith("/_images")) {
     url = `https://dollbooru.org${url}`
   }
 
-  if (url.startsWith('//derpicdn.net')) {
+  if (url.startsWith("//derpicdn.net")) {
     url = `https:${data.image}`
   }
 
@@ -48,12 +48,12 @@ function parseImageUrl(url: string, data: any, booru: Booru): string | null {
     // Sometimes we get it in the API response as `data.directory`, sometimes it's null
     // for some ungodly reason
     // I despise the danbooru api honestly
-    const directory =
-      data.directory ?? `${data.hash.substr(0, 2)}/${data.hash.substr(2, 2)}`
+    const directory = data.directory ??
+      `${data.hash.substr(0, 2)}/${data.hash.substr(2, 2)}`
     url = `//${booru.domain}/images/${directory}/${data.image}`
   }
 
-  if (!url.startsWith('http')) {
+  if (!url.startsWith("http")) {
     url = `https:${url}`
   }
 
@@ -73,13 +73,13 @@ function getTags(data: any): string[] {
     tags = data.tags
   } else if (data.tags && data.tags.general) {
     tags = Object.values<string>(data.tags).flat()
-  } else if (typeof data.tags === 'string') {
+  } else if (typeof data.tags === "string") {
     tags = fromTagString(data.tags)
-  } else if (typeof data.tag_string === 'string') {
+  } else if (typeof data.tag_string === "string") {
     tags = fromTagString(data.tag_string)
   }
 
-  return tags.filter((v) => v !== '')
+  return tags.filter((v) => v !== "")
 }
 
 /**
@@ -92,7 +92,7 @@ function getTags(data: any): string[] {
  * @returns The string, parsed into an array of tags
  */
 function fromTagString(tags: string): string[] {
-  return tags.split(' ').map((v) => v.replace(/,/g, ''))
+  return tags.split(" ").map((v) => v.replace(/,/g, ""))
 }
 
 /**
@@ -223,7 +223,7 @@ export default class Post {
       10,
     )
 
-    this.id = data.id ? data.id.toString() : 'No ID available'
+    this.id = data.id ? data.id.toString() : "No ID available"
     this.tags = getTags(data)
 
     if (data.score && data.score.total !== undefined) {
@@ -233,33 +233,32 @@ export default class Post {
     }
 
     this.source = data.source || data.sources || data.source_url
-    this.rating =
-      data.rating ||
+    this.rating = data.rating ||
       /(safe|suggestive|questionable|explicit)/i.exec(data.tags) ||
-      'u'
+      "u"
 
     if (Array.isArray(this.rating)) {
       this.rating = this.rating[0]
     }
 
     // Thanks derpibooru
-    if (this.rating === 'suggestive') {
-      this.rating = 'q'
+    if (this.rating === "suggestive") {
+      this.rating = "q"
     }
 
     this.rating = this.rating.charAt(0)
 
     this.createdAt = null
     // eslint-disable-next-line
-    if (typeof data.created_at === 'object') {
+    if (typeof data.created_at === "object") {
       this.createdAt = new Date(
         data.created_at.s * 1000 + data.created_at.n / 1000000000,
       )
-    } else if (typeof data.created_at === 'number') {
+    } else if (typeof data.created_at === "number") {
       this.createdAt = new Date(data.created_at * 1000)
-    } else if (typeof data.created_at === 'string') {
+    } else if (typeof data.created_at === "string") {
       this.createdAt = new Date(data.created_at)
-    } else if (typeof data.change === 'number') {
+    } else if (typeof data.change === "number") {
       this.createdAt = new Date(data.change * 1000)
     } else {
       this.createdAt = new Date(data.created_at || data.date)
@@ -337,26 +336,5 @@ export default class Post {
    */
   get postView(): string {
     return this.booru.postView(this.id)
-  }
-
-  /**
-   * Get some common props on the image
-   *
-   * @deprecated All common props are now attached directly to the image
-   * @type {Object}
-   *
-   * @example
-   * ```
-   * image.id
-   * // deprecated, use this instead
-   * image.id
-   *
-   * // To access the post's raw data from the booru, do
-   * image._data.id
-   * ```
-   */
-  get common(): this {
-    common()
-    return this
   }
 }

@@ -3,10 +3,10 @@
  * @module Structures
  */
 
-import Booru from '../boorus/Booru'
-import Post from '../structures/Post'
-import * as Utils from '../Utils'
-import SearchParameters from './SearchParameters'
+import Booru from "../boorus/Booru.ts"
+import Post from "../structures/Post.ts"
+import * as Utils from "../Utils.ts"
+import SearchParameters from "./SearchParameters.ts"
 
 /**
  * Represents a page of search results, works like an array of {@link Post}

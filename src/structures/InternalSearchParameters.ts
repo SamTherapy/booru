@@ -3,7 +3,7 @@
  * @module Structures
  */
 
-import SearchParameters from './SearchParameters'
+import SearchParameters from "./SearchParameters.ts"
 
 /**
  * Interface for {@link Booru}'s **private internal** search params pls no use
