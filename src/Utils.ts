@@ -5,7 +5,7 @@
 
 import { AnySite, BooruError, sites } from "./Constants.ts"
 
-import { XMLParser } from "https://esm.sh/fast-xml-parser@4.2.7"
+import { XMLParser } from "npm:fast-xml-parser"
 
 /**
  * Check if `site` is a supported site (and check if it's an alias and return the sites's true name)
