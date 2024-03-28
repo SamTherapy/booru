@@ -3,6 +3,8 @@
 > _A node package to search boorus_
 
 ![Typescript typings](https://img.shields.io/badge/Typings-Typescript-informational.svg)
+[![Built with the Deno Standard Library](https://raw.githubusercontent.com/denoland/deno_std/main/badge.svg)](https://deno.land/std)
+
 
 ## Features
 
